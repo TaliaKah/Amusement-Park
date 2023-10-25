@@ -1,0 +1,77 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class VisitorTest : MonoBehaviour
+{
+    private UnityEngine.AI.NavMeshAgent agent;
+
+    private Vector3 destination;
+
+    enum State{
+        In_attraction,
+        Waiting,
+        Leaving,
+        On_their_way,
+    }
+
+    private State state;
+
+    private void Set_destination(){
+        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        GameObject poiManagerObject = GameObject.Find("POIManager");
+        if (poiManagerObject != null) {
+            POIManager poiManager = poiManagerObject.GetComponent<POIManager>();
+            if (poiManager != null) {
+                List<Vector3> POIs_position = poiManager.POIs_position;
+                if (POIs_position.Count > 0) {
+                    int indexAleatoire = new System.Random().Next(0, POIs_position.Count);
+                    destination = POIs_position[indexAleatoire];
+                    agent.SetDestination(destination);
+                }
+            }
+        }
+    }
+
+
+    double threshold = 1.0;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Set_destination();
+        state = State.On_their_way;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (state == State.Leaving){
+            Set_destination();
+            Debug.Log("State : On_their_Way");
+            state = State.On_their_way;
+        }
+        if (transform.position.x - destination.x < threshold && transform.position.z - destination.z < threshold){
+            // s'ajouter à la liste d'entrée
+            Debug.Log("State : Waiting");
+            state = State.Waiting;
+        }
+        if (state == State.Waiting){
+            // si place dans l'attraction s'y mettre
+            Debug.Log("State : In_attraction");
+            state = State.In_attraction;
+        }
+        // Test
+        if (state == State.In_attraction)
+        {
+            // if () temps du visiteur a dépassé celui prévu de l'attraction le faire sortir
+            Debug.Log("State : Leaving");
+            state = State.Leaving;
+        }
+    }
+
+        // visiteur se place dans la filequand il arrive près de la fin de la file
+    // visiteur avec GameObject.Find() va trouver mes POIs qui seront gerer par un managerPOI où j'aurais le nombre de POI pour faire une boucle dessus
+// le visiteur regarde si entr�e libre sinon se met dans la file, pour la sortie doit se casser pour laisser la place aux autres
+// la sortie doit dire si elle est libre
+}
