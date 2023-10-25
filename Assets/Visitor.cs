@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VisitorTest : MonoBehaviour
+public class Visitor : MonoBehaviour
 {
     private UnityEngine.AI.NavMeshAgent agent;
 
