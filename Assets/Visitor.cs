@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Visitor : MonoBehaviour
 {
+    public GameObject door;
+
     private UnityEngine.AI.NavMeshAgent agent;
 
     private Vector3 destination;
@@ -33,12 +35,13 @@ public class Visitor : MonoBehaviour
         }
     }
 
-
     double threshold = 1.0;
 
     // Start is called before the first frame update
     void Start()
     {
+        transform.position = door.transform.position;
+        transform.rotation = door.transform.rotation;
         Set_destination();
         state = State.On_their_way;
     }
