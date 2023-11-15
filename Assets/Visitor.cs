@@ -19,6 +19,25 @@ public class Visitor : MonoBehaviour
 
     private State state;
 
+    public void Update_state()
+    {
+        switch(state)
+        {
+            case State.On_their_way :
+                state = State.Waiting;
+                break;
+            case State.Waiting : 
+                state = State.In_attraction;
+                break;
+            case State.In_attraction :
+                state = State.Leaving;
+                break;
+            case State.Leaving :
+                state = State.On_their_way;
+                break;
+        }
+    }
+
     private void Set_destination(){
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         GameObject poiManagerObject = GameObject.Find("POIManager");
@@ -52,25 +71,27 @@ public class Visitor : MonoBehaviour
         if (state == State.Leaving){
             Set_destination();
             Debug.Log("State : On_their_Way");
-            state = State.On_their_way;
+            Update_state();
         }
         if (transform.position.x - destination.x < threshold && transform.position.z - destination.z < threshold){
             // s'ajouter à la liste d'entrée
             Debug.Log("State : Waiting");
-            state = State.Waiting;
+            Update_state();
         }
-        if (state == State.Waiting){
-            // si place dans l'attraction s'y mettre
-            Debug.Log("State : In_attraction");
-            state = State.In_attraction;
-        }
+        // if (state == State.Waiting){
+        //     // si place dans l'attraction s'y mettre
+        //     Debug.Log("State : In_attraction");
+        //     state = State.In_attraction;
+            // se placer derrière le visiteur d'avant dans la file
+        // }
         // Test
-        if (state == State.In_attraction)
-        {
-            // if () temps du visiteur a dépassé celui prévu de l'attraction le faire sortir
-            Debug.Log("State : Leaving");
-            state = State.Leaving;
-        }
+        // if (state == State.In_attraction)
+        // {
+        //     // if () temps du visiteur a dépassé celui prévu de l'attraction le faire sortir
+        //     Debug.Log("State : Leaving");
+        //     state = State.Leaving;
+        // faire disparaitre le perso dans l'attraction et quand il part le faire réaparaître à la sortie
+        // }
     }
 
         // visiteur se place dans la filequand il arrive près de la fin de la file

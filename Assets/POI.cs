@@ -52,6 +52,7 @@ public class POI : MonoBehaviour
             {     
                 visitor_in_attraction.Add(visitor,0.0f);
                 Entrance.Visitor_left_the_queue(visitor);
+                visitor.Update_state();
             }
         }
     }
@@ -72,6 +73,7 @@ public class POI : MonoBehaviour
         foreach (Visitor visitor in visitorsToRemove)
         {
             visitor_in_attraction.Remove(visitor);
+            visitor.Update_state();
         }
     }
 
