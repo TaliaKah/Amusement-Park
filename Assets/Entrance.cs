@@ -5,7 +5,12 @@ using UnityEngine;
 public class Entrance : MonoBehaviour
 {
 
-    public List<Visitor> visitor_queue = new List<Visitor>();
+    private List<Visitor> visitor_queue = new List<Visitor>();
+
+    public List<Visitor> Get_queue()
+    {
+        return visitor_queue;
+    }
 
     public void Visitor_reach_the_queue(Visitor visitor){
         visitor_queue.Add(visitor);

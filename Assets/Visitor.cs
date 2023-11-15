@@ -54,6 +54,25 @@ public class Visitor : MonoBehaviour
         }
     }
 
+    private void Go_to_waiting_queue()
+    {
+        POIManager poiManager = FindObjectOfType<POIManager>();
+
+        if (poiManager != null)
+        {
+            Entrance entranceScript = poiManager.GetComponentInChildren<Entrance>();
+            if (entranceScript != null)
+            {
+                entranceScript.Visitor_reach_the_queue(this);
+                Debug.Log("Visitor in waiting queue");
+            }
+            else
+            {
+                Debug.LogError("Entrance script not found!");
+            }
+        }
+    }
+
     double threshold = 1.0;
 
     // Start is called before the first frame update
@@ -74,7 +93,7 @@ public class Visitor : MonoBehaviour
             Update_state();
         }
         if (transform.position.x - destination.x < threshold && transform.position.z - destination.z < threshold){
-            // s'ajouter à la liste d'entrée
+            Go_to_waiting_queue();
             Debug.Log("State : Waiting");
             Update_state();
         }

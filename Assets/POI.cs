@@ -45,34 +45,48 @@ public class POI : MonoBehaviour
     void Fill_the_attraction() {
         var Entrance = transform.Find("Entrance").GetComponent<Entrance>();
 
-        while (visitor_in_attraction.Count < maxVisitors && 
-            !Entrance.queue_is_empty())
-        {   
-            foreach (Visitor visitor in Entrance.visitor_queue)
-            {     
-                visitor_in_attraction.Add(visitor,0.0f);
-                Entrance.Visitor_left_the_queue(visitor);
-                visitor.Update_state();
+        List<Visitor> visitors_in_waiting_queue = new List<Visitor>(Entrance.Get_queue());
+        // Vérifier si la capacité maximale d'attraction n'est pas encore atteinte.
+        while (visitor_in_attraction.Count < maxVisitors && !Entrance.queue_is_empty())
+        {
+            foreach (Visitor visitor in visitors_in_waiting_queue)
+            {
+                // Vérifier si le visiteur n'est pas déjà dans l'attraction.
+                if (!visitor_in_attraction.ContainsKey(visitor))
+                {
+                    visitor_in_attraction.Add(visitor, 0.0f);
+                    Entrance.Visitor_left_the_queue(visitor);
+                    visitor.Update_state();
+                }
             }
+
+            // Mettre à jour la liste des visiteurs en attente après chaque itération.
+            visitors_in_waiting_queue = new List<Visitor>(Entrance.Get_queue());
         }
     }
 
     void Visitor_left_the_attraction(){
         List<Visitor> visitorsToRemove = new List<Visitor>();
+        List<Visitor> visitorsToUpdateState = new List<Visitor>();
 
-        foreach (var key in visitor_in_attraction)
+        List<Visitor> currentVisitors = new List<Visitor>(visitor_in_attraction.Keys);
+
+        foreach (var key in currentVisitors)
         {
-            visitor_in_attraction[key.Key] += Time.deltaTime; // Increment the visit duration.
+            visitor_in_attraction[key] += Time.deltaTime; // Increment the visit duration.
 
-            if (visitor_in_attraction[key.Key] >= visitDuration) // on rajoutera qu'il faudra que la sortie soit free peut-être
+            if (visitor_in_attraction[key] >= visitDuration) // on rajoutera qu'il faudra que la sortie soit free peut-être
             {
-                visitorsToRemove.Add(key.Key);
+                visitorsToRemove.Add(key);
+                visitorsToUpdateState.Add(key);
             }
         }
-
         foreach (Visitor visitor in visitorsToRemove)
         {
             visitor_in_attraction.Remove(visitor);
+        }
+        foreach (Visitor visitor in visitorsToUpdateState)
+        {
             visitor.Update_state();
         }
     }
