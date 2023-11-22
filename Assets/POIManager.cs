@@ -26,9 +26,4 @@ public class POIManager : MonoBehaviour
     void Start(){
         Get_POIs_position();
     }
-
-        // visiteur se place dans la filequand il arrive près de la fin de la file
-    // visiteur avec GameObject.Find() va trouver mes POIs qui seront gerer par un managerPOI où j'aurais le nombre de POI pour faire une boucle dessus
-// le visiteur regarde si entr�e libre sinon se met dans la file, pour la sortie doit se casser pour laisser la place aux autres
-// la sortie doit dire si elle est libre
 }
