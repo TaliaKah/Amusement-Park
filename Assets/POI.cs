@@ -9,6 +9,17 @@ public class POI : MonoBehaviour
 
     private Dictionary<Visitor,float> visitor_in_attraction = new Dictionary<Visitor,float>();
 
+    private Entrance entrance;
+    private Exit exit;
+
+    void Start()
+    {
+        entrance = GetComponentInChildren<Entrance>();
+        Debug.Log("entrance pos : "+ entrance.transform.position);
+        exit = GetComponentInChildren<Exit>();
+        Debug.Log("exit pos : "+ exit.transform.position);
+    }
+
     Vector3 Get_position(string Tag){
         var childTransform = transform.Find(Tag);
         if (childTransform != null)
@@ -30,16 +41,16 @@ public class POI : MonoBehaviour
         return Get_position("Exit");
     }
 
-    void Fill_the_attraction() {
-        var Entrance = transform.Find("Entrance").GetComponent<Entrance>();
-        
+    void Fill_the_attraction(Entrance visitorEntrance)
+    {        
         List<Visitor> visitorsToRemove = new List<Visitor>();
         List<Visitor> visitorsToUpdateState = new List<Visitor>();
+
 
         // Vérifier si la capacité maximale d'attraction n'est pas encore atteinte.
         if (visitor_in_attraction.Count < maxVisitors)
         {
-            foreach (var visitor in Entrance.Get_queue())
+            foreach (var visitor in visitorEntrance.Get_queue())
             {
                 visitor_in_attraction.Add(visitor, 0.0f);
                 visitorsToRemove.Add(visitor);
@@ -47,7 +58,7 @@ public class POI : MonoBehaviour
             }
             foreach (Visitor visitor in visitorsToRemove)
             {
-                Entrance.Visitor_left_the_queue(visitor);
+                visitorEntrance.Visitor_left_the_queue(visitor);
             }
             foreach (Visitor visitor in visitorsToUpdateState)
             {
@@ -56,12 +67,12 @@ public class POI : MonoBehaviour
         }
     }
 
-    void Visitor_left_the_attraction(){
+    void Visitor_left_the_attraction(Exit visitorExit){
+
         List<Visitor> visitorsToRemove = new List<Visitor>();
-        List<Visitor> visitorsToUpdateState = new List<Visitor>();
+        List<Visitor> visitorsToUpdate = new List<Visitor>();
 
         List<Visitor> currentVisitors = new List<Visitor>(visitor_in_attraction.Keys);
-
         foreach (var key in currentVisitors)
         {
             visitor_in_attraction[key] += Time.deltaTime; // Increment the visit duration.
@@ -69,30 +80,25 @@ public class POI : MonoBehaviour
             if (visitor_in_attraction[key] >= visitDuration) // on rajoutera qu'il faudra que la sortie soit free peut-être
             {
                 visitorsToRemove.Add(key);
-                visitorsToUpdateState.Add(key);
+                visitorsToUpdate.Add(key);
             }
         }
         foreach (Visitor visitor in visitorsToRemove)
         {
-            visitor_in_attraction.Remove(visitor);
+           visitor_in_attraction.Remove(visitor); 
         }
-        foreach (Visitor visitor in visitorsToUpdateState)
+        foreach (Visitor visitor in visitorsToUpdate)
         {
-            visitor.Update_state();
+            visitor.Set_position(visitorExit.transform.position);
+            visitor.Update_state();            
         }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        Visitor_left_the_attraction();
-        Fill_the_attraction();
+        Visitor_left_the_attraction(exit);
+        Fill_the_attraction(entrance);
     }
 }
 

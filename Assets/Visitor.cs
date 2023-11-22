@@ -38,6 +38,13 @@ public class Visitor : MonoBehaviour
         }
     }
 
+    public void Set_position(Vector3 position)
+    {
+        transform.position = position;
+    }
+
+    private int poiIndex;
+
     private void Set_destination(){
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         GameObject poiManagerObject = GameObject.Find("POIManager");
@@ -46,8 +53,8 @@ public class Visitor : MonoBehaviour
             if (poiManager != null) {
                 List<Vector3> POIs_position = poiManager.POIs_position;
                 if (POIs_position.Count > 0) {
-                    int indexAleatoire = new System.Random().Next(0, POIs_position.Count);
-                    destination = POIs_position[indexAleatoire];
+                    poiIndex = new System.Random().Next(0, POIs_position.Count);
+                    destination = POIs_position[poiIndex];
                     agent.SetDestination(destination);
                 }
             }
@@ -56,19 +63,25 @@ public class Visitor : MonoBehaviour
 
     private void Go_to_waiting_queue()
     {
-        POI poi = FindObjectOfType<POI>();
-
-        if (poi != null)
-        {
-            Entrance entranceScript = poi.GetComponentInChildren<Entrance>();
-            if (entranceScript != null)
-            {
-                entranceScript.Visitor_reach_the_queue(this);
-                Debug.Log("Visitor in waiting queue");
-            }
-            else
-            {
-                Debug.LogError("Entrance script not found!");
+        GameObject poiManagerObject = GameObject.Find("POIManager");
+        if (poiManagerObject != null) {
+            POIManager poiManager = poiManagerObject.GetComponent<POIManager>();
+            if (poiManager != null) {
+                int index = poiIndex + 1;
+                POI poi = poiManager.transform.Find("POI "+ index).GetComponent<POI>();
+                if (poi != null)
+                {
+                    Entrance entranceScript = poi.GetComponentInChildren<Entrance>();
+                    if (entranceScript != null)
+                    {
+                        entranceScript.Visitor_reach_the_queue(this);
+                        Debug.Log("Visitor in waiting queue");
+                    }
+                    else
+                    {
+                        Debug.LogError("Entrance script not found!");
+                    }
+                }
             }
         }
     }
@@ -100,19 +113,13 @@ public class Visitor : MonoBehaviour
             Debug.Log("State : Waiting");
             Update_state();
         }
-        // if (state == State.Waiting){
-        //     // si place dans l'attraction s'y mettre
-        //     Debug.Log("State : In_attraction");
-        //     state = State.In_attraction;
-            // se placer derrière le visiteur d'avant dans la file
-        // }
-        // Test
+        if (state == State.Waiting)
+        {
+            // le visiteur se place derrière le visiteur précédent
+        }
         // if (state == State.In_attraction)
         // {
-        //     // if () temps du visiteur a dépassé celui prévu de l'attraction le faire sortir
-        //     Debug.Log("State : Leaving");
-        //     state = State.Leaving;
-        // faire disparaitre le perso dans l'attraction et quand il part le faire réaparaître à la sortie
+            // faire disparaitre le perso dans l'attraction et quand il part le faire réaparaître à la sortie
         // }
     }
 }
