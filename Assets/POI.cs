@@ -63,6 +63,7 @@ public class POI : MonoBehaviour
             foreach (Visitor visitor in visitorsToUpdateState)
             {
                 visitor.Update_state();
+                visitor.gameObject.SetActive(false);
             }
         }
     }
@@ -89,6 +90,7 @@ public class POI : MonoBehaviour
         }
         foreach (Visitor visitor in visitorsToUpdate)
         {
+            visitor.gameObject.SetActive(true);
             visitor.Set_position(visitorExit.transform.position);
             visitor.Update_state();            
         }

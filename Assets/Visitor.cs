@@ -117,9 +117,5 @@ public class Visitor : MonoBehaviour
         {
             // le visiteur se place derrière le visiteur précédent
         }
-        // if (state == State.In_attraction)
-        // {
-            // faire disparaitre le perso dans l'attraction et quand il part le faire réaparaître à la sortie
-        // }
     }
 }
