@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class POI : MonoBehaviour
 {
-    public float visitDuration = 5.0f;
+    public float visitDuration = 5.0f; // en frame
     public int maxVisitors = 5;
 
     private Dictionary<Visitor,float> visitor_in_attraction = new Dictionary<Visitor,float>();

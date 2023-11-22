@@ -56,11 +56,11 @@ public class Visitor : MonoBehaviour
 
     private void Go_to_waiting_queue()
     {
-        POIManager poiManager = FindObjectOfType<POIManager>();
+        POI poi = FindObjectOfType<POI>();
 
-        if (poiManager != null)
+        if (poi != null)
         {
-            Entrance entranceScript = poiManager.GetComponentInChildren<Entrance>();
+            Entrance entranceScript = poi.GetComponentInChildren<Entrance>();
             if (entranceScript != null)
             {
                 entranceScript.Visitor_reach_the_queue(this);

@@ -373,7 +373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3be2f581c83374caf4127493f7aebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visitDuration: 5
+  visitDuration: 10
   maxVisitors: 5
 --- !u!1 &516049713
 GameObject:
@@ -555,7 +555,7 @@ GameObject:
   - component: {fileID: 660750929}
   - component: {fileID: 660750930}
   m_Layer: 0
-  m_Name: POI 1
+  m_Name: POI 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -570,14 +570,14 @@ Transform:
   m_GameObject: {fileID: 660750928}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 38.600006, y: 24.2, z: -6.6700134}
+  m_LocalPosition: {x: 82.28058, y: 24.200003, z: -374.74002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2116322140}
   - {fileID: 1558631141}
   - {fileID: 667562695}
-  m_Father: {fileID: 1363675257}
+  m_Father: {fileID: 1523853460}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &660750930
 MonoBehaviour:
@@ -591,7 +591,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3be2f581c83374caf4127493f7aebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visitDuration: 5
+  visitDuration: 20
   maxVisitors: 5
 --- !u!1 &667562694
 GameObject:
@@ -637,7 +637,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c29bf5802135db4e8b9030e4a47cee0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visitor_queue: []
 --- !u!1 &687772920
 GameObject:
   m_ObjectHideFlags: 0
@@ -992,7 +991,7 @@ Transform:
   m_GameObject: {fileID: 1213546733}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -38.6, y: -24.2, z: 6.67}
+  m_LocalPosition: {x: -38.6, y: -26.7, z: 6.67}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1010,53 +1009,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c29bf5802135db4e8b9030e4a47cee0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visitor_queue: []
---- !u!1 &1363675256
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1363675257}
-  - component: {fileID: 1363675258}
-  m_Layer: 0
-  m_Name: POIManager (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1363675257
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1363675256}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 17.5, y: 12.960001, z: -148.2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 660750929}
-  m_Father: {fileID: 1812119598}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1363675258
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1363675256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a47d3f9b3a90ba24d97758c4491f8b47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  POIs_position: []
 --- !u!1 &1523853459
 GameObject:
   m_ObjectHideFlags: 0
@@ -1088,6 +1040,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 390389839}
+  - {fileID: 660750929}
   m_Father: {fileID: 1812119598}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1523853461
@@ -1223,7 +1176,6 @@ Transform:
   m_Children:
   - {fileID: 551824237}
   - {fileID: 1523853460}
-  - {fileID: 1363675257}
   - {fileID: 53012927}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1376,7 +1328,7 @@ GameObject:
   - component: {fileID: 2069560747}
   - component: {fileID: 2069560748}
   m_Layer: 0
-  m_Name: Attraction 1
+  m_Name: Attraction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1515,7 +1467,7 @@ GameObject:
   - component: {fileID: 2116322142}
   - component: {fileID: 2116322141}
   m_Layer: 0
-  m_Name: Attraction 1
+  m_Name: Attraction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
