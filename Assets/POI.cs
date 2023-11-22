@@ -32,16 +32,26 @@ public class POI : MonoBehaviour
 
     void Fill_the_attraction() {
         var Entrance = transform.Find("Entrance").GetComponent<Entrance>();
+        
+        List<Visitor> visitorsToRemove = new List<Visitor>();
+        List<Visitor> visitorsToUpdateState = new List<Visitor>();
 
         // Vérifier si la capacité maximale d'attraction n'est pas encore atteinte.
         if (visitor_in_attraction.Count < maxVisitors)
         {
             foreach (var visitor in Entrance.Get_queue())
             {
-                Entrance.Visitor_left_the_queue(visitor);
                 visitor_in_attraction.Add(visitor, 0.0f);
+                visitorsToRemove.Add(visitor);
+                visitorsToUpdateState.Add(visitor);
+            }
+            foreach (Visitor visitor in visitorsToRemove)
+            {
+                Entrance.Visitor_left_the_queue(visitor);
+            }
+            foreach (Visitor visitor in visitorsToUpdateState)
+            {
                 visitor.Update_state();
-                break;
             }
         }
     }
