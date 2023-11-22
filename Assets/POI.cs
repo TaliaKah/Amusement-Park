@@ -45,23 +45,16 @@ public class POI : MonoBehaviour
     void Fill_the_attraction() {
         var Entrance = transform.Find("Entrance").GetComponent<Entrance>();
 
-        List<Visitor> visitors_in_waiting_queue = new List<Visitor>(Entrance.Get_queue());
         // Vérifier si la capacité maximale d'attraction n'est pas encore atteinte.
-        while (visitor_in_attraction.Count < maxVisitors && !Entrance.queue_is_empty())
+        if (visitor_in_attraction.Count < maxVisitors)
         {
-            foreach (Visitor visitor in visitors_in_waiting_queue)
+            foreach (var visitor in Entrance.Get_queue())
             {
-                // Vérifier si le visiteur n'est pas déjà dans l'attraction.
-                if (!visitor_in_attraction.ContainsKey(visitor))
-                {
-                    visitor_in_attraction.Add(visitor, 0.0f);
-                    Entrance.Visitor_left_the_queue(visitor);
-                    visitor.Update_state();
-                }
+                Entrance.Visitor_left_the_queue(visitor);
+                visitor_in_attraction.Add(visitor, 0.0f);
+                visitor.Update_state();
+                break;
             }
-
-            // Mettre à jour la liste des visiteurs en attente après chaque itération.
-            visitors_in_waiting_queue = new List<Visitor>(Entrance.Get_queue());
         }
     }
 

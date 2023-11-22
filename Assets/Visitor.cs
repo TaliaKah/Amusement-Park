@@ -92,7 +92,10 @@ public class Visitor : MonoBehaviour
             Debug.Log("State : On_their_Way");
             Update_state();
         }
-        if (transform.position.x - destination.x < threshold && transform.position.z - destination.z < threshold){
+        if (transform.position.x - destination.x < threshold &&
+            transform.position.z - destination.z < threshold &&
+            state == State.On_their_way)
+        {
             Go_to_waiting_queue();
             Debug.Log("State : Waiting");
             Update_state();
