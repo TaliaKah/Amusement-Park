@@ -10,7 +10,7 @@ public class Population : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < numberOfVisitors; i++)
+        for (int i = 0; i < numberOfVisitors - 1; i++)
         {
             GameObject newVisitor = Instantiate(visitorPrefab, visitorPrefab.transform.position, Quaternion.identity);
             newVisitor.transform.parent = transform;
