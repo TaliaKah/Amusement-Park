@@ -30,18 +30,6 @@ public class POI : MonoBehaviour
         return Get_position("Exit");
     }
 
-    // void Visitor_enter_the_attraction (Visitor visitor){
-    //     if (visitor_in_attraction.Count < maxVisitors)
-    //     {
-    //         visitor_in_attraction.Add(visitor,0.0f);
-    //         transform.Find("Entrance").GetComponent<Entrance>().Visitor_left_the_queue(visitor);
-    //     }
-    //     else
-    //     {
-    //         Debug.Log("Attraction is full. Cannot add more visitors.");
-    //     }
-    // }
-
     void Fill_the_attraction() {
         var Entrance = transform.Find("Entrance").GetComponent<Entrance>();
 
@@ -83,11 +71,6 @@ public class POI : MonoBehaviour
             visitor.Update_state();
         }
     }
-
-    // void Update_visitor_list(){
-        
-    // }
-
 
     // Start is called before the first frame update
     void Start()
