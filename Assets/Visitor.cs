@@ -26,17 +26,21 @@ public class Visitor : MonoBehaviour
         {
             case State.On_their_way :
                 state = State.Waiting;
+                Debug.Log("State : Waiting");
                 break;
             case State.Waiting : 
                 state = State.In_attraction;
                 gameObject.SetActive(false);
+                Debug.Log("State : In attraction");
                 break;
             case State.In_attraction :
                 state = State.Leaving;
                 gameObject.SetActive(true);
+                Debug.Log("State : Leaving");
                 break;
             case State.Leaving :
                 state = State.On_their_way;
+                Debug.Log("State : On_their_Way"); 
                 break;
         }
     }
@@ -126,7 +130,6 @@ public class Visitor : MonoBehaviour
     {
         if (state == State.Leaving){
             Set_destination();
-            Debug.Log("State : On_their_Way");
             Update_state();
         }
         if (transform.position.x - destination.x < threshold &&
@@ -134,7 +137,6 @@ public class Visitor : MonoBehaviour
             state == State.On_their_way)
         {
             Go_to_waiting_queue();
-            Debug.Log("State : Waiting");
             Update_state();
         }
         if (state == State.Waiting)
