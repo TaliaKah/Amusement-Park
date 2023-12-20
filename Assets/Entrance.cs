@@ -24,5 +24,10 @@ public class Entrance : MonoBehaviour
         return (visitor_queue.Count == 0);
     }
 
+    public Vector3 Get_waiting_position()
+    {
+        return (queue_is_empty()) ? transform.position : visitor_queue[visitor_queue.Count - 1].transform.position;
+    }
+
 
 }

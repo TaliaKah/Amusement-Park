@@ -7,6 +7,7 @@ public class Visitor : MonoBehaviour
     public GameObject door;
 
     private UnityEngine.AI.NavMeshAgent agent;
+    private Entrance entranceScript;
 
     private Vector3 destination;
 
@@ -46,7 +47,6 @@ public class Visitor : MonoBehaviour
     private int poiIndex;
 
     private void Set_destination(){
-        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         GameObject poiManagerObject = GameObject.Find("POIManager");
         if (poiManagerObject != null) {
             POIManager poiManager = poiManagerObject.GetComponent<POIManager>();
@@ -71,7 +71,8 @@ public class Visitor : MonoBehaviour
                 POI poi = poiManager.transform.Find("POI "+ index).GetComponent<POI>();
                 if (poi != null)
                 {
-                    Entrance entranceScript = poi.GetComponentInChildren<Entrance>();
+                    entranceScript = poi.GetComponentInChildren<Entrance>();
+
                     if (entranceScript != null)
                     {
                         entranceScript.Visitor_reach_the_queue(this);
@@ -97,11 +98,26 @@ public class Visitor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameObject poiManagerObject = GameObject.Find("POIManager");
+        if (poiManagerObject != null) {
+            POIManager poiManager = poiManagerObject.GetComponent<POIManager>();
+            if (poiManager != null) {
+                int index = poiIndex + 1;
+                POI poi = poiManager.transform.Find("POI "+ index).GetComponent<POI>();
+                if (poi != null)
+                {
+                    entranceScript = poi.GetComponentInChildren<Entrance>();
+                }
+            }
+        }
+        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         transform.position = door.transform.position;
         transform.rotation = door.transform.rotation;
         Set_destination();
         state = State.On_their_way;
     }
+
+    private float distanceBehindLastVisitor = 2f;
 
     // Update is called once per frame
     void Update()
@@ -121,8 +137,14 @@ public class Visitor : MonoBehaviour
         }
         if (state == State.Waiting)
         {
-            Stopmoving();
-            // le visiteur se place derrière le visiteur précédent
+            Vector3 waiting_destination = entranceScript.Get_waiting_position() - (transform.forward * distanceBehindLastVisitor);
+            agent.SetDestination(waiting_destination);
+            if (transform.position.x - destination.x < distanceBehindLastVisitor &&
+                transform.position.z - destination.z < distanceBehindLastVisitor)
+            {
+                Stopmoving();
+            }
+
         }
     }
 }
