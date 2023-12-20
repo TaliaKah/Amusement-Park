@@ -86,6 +86,12 @@ public class Visitor : MonoBehaviour
         }
     }
 
+    private void Stopmoving()
+    {
+        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        agent.Stop();
+    }
+
     double threshold = 1.0;
 
     // Start is called before the first frame update
@@ -115,6 +121,7 @@ public class Visitor : MonoBehaviour
         }
         if (state == State.Waiting)
         {
+            Stopmoving();
             // le visiteur se place derrière le visiteur précédent
         }
     }
