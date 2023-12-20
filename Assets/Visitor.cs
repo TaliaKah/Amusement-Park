@@ -132,8 +132,8 @@ public class Visitor : MonoBehaviour
             Set_destination();
             Update_state();
         }
-        if (transform.position.x - destination.x < threshold &&
-            transform.position.z - destination.z < threshold &&
+        if (Mathf.Abs(transform.position.x - destination.x) < threshold &&
+            Mathf.Abs(transform.position.z - destination.z) < threshold &&
             state == State.On_their_way)
         {
             Go_to_waiting_queue();
@@ -143,8 +143,8 @@ public class Visitor : MonoBehaviour
         {
             Vector3 waiting_destination = entranceScript.Get_waiting_position() - (transform.forward * distanceBehindLastVisitor);
             agent.SetDestination(waiting_destination);
-            if (transform.position.x - destination.x < distanceBehindLastVisitor &&
-                transform.position.z - destination.z < distanceBehindLastVisitor)
+            if (Mathf.Abs(transform.position.x - destination.x) < distanceBehindLastVisitor &&
+                Mathf.Abs(transform.position.z - destination.z) < distanceBehindLastVisitor)
             {
                 Stopmoving();
             }
