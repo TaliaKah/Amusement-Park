@@ -29,9 +29,11 @@ public class Visitor : MonoBehaviour
                 break;
             case State.Waiting : 
                 state = State.In_attraction;
+                gameObject.SetActive(false);
                 break;
             case State.In_attraction :
                 state = State.Leaving;
+                gameObject.SetActive(true);
                 break;
             case State.Leaving :
                 state = State.On_their_way;
@@ -144,7 +146,6 @@ public class Visitor : MonoBehaviour
             {
                 Stopmoving();
             }
-
         }
     }
 }
