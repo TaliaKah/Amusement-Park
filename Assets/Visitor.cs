@@ -82,7 +82,8 @@ public class Visitor : MonoBehaviour
                     if (entranceScript != null)
                     {
                         entranceScript.Visitor_reach_the_queue(this);
-                        Debug.Log("Visitor in waiting queue");
+                        Debug.Log(this.name + " enters the waiting queue");
+                        Debug.Log("Number of element in waiting queue in POI " + index + entranceScript.Get_queue().Count);
                     }
                     else
                     {
