@@ -24,10 +24,19 @@ public class Entrance : MonoBehaviour
         return (visitor_queue.Count == 0);
     }
 
-    public Vector3 Get_waiting_position()
+    public Vector3 Get_entrance_position()
     {
-        return (queue_is_empty()) ? transform.position : visitor_queue[visitor_queue.Count - 1].transform.position;
+        return transform.position;
     }
 
+    public Vector3 Get_waiting_position_at_the_end_of_the_file(float distanceBehindLastVisitor)
+    {
+        return (queue_is_empty()) ? transform.position : Get_last_visitor().transform.position - (Get_last_visitor().transform.forward * distanceBehindLastVisitor);
+    }
+
+    public Visitor Get_last_visitor()
+    {
+        return (queue_is_empty()) ? null : visitor_queue[visitor_queue.Count - 1];
+    }
 
 }
