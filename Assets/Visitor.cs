@@ -98,7 +98,7 @@ public class Visitor : MonoBehaviour
     private void Stopmoving()
     {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        agent.Stop();
+        agent.isStopped = true;
     }
 
     double threshold = 1.0;
