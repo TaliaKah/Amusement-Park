@@ -54,6 +54,7 @@ public class POI : MonoBehaviour
             {
                 if (visitor_in_attraction.Count >= maxVisitors)
                 {
+                    visitor.Set_target_to_null();
                     break;
                 }
                 visitor_in_attraction.Add(visitor, 0.0f);

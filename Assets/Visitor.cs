@@ -13,7 +13,7 @@ public class Visitor : MonoBehaviour
     private State state;
     private Visitor target;
     private int poiIndex;
-    
+
     private double threshold = 3.0;
     private float distanceBehindLastVisitor = 4f;
 
@@ -53,6 +53,11 @@ public class Visitor : MonoBehaviour
     public void Set_position(Vector3 position)
     {
         transform.position = position;
+    }
+
+    public void Set_target_to_null()
+    {
+        target = null;
     }
 
     private void Set_destination()
@@ -148,8 +153,9 @@ public class Visitor : MonoBehaviour
                 (target == null) ?
                     entranceScript.Get_entrance_position() :
                     target.transform.position - (transform.forward * distanceBehindLastVisitor);
-            if (Vector3.Distance(transform.position, waiting_destination) > distanceBehindLastVisitor)
+            if (Vector3.Distance(transform.position, waiting_destination) > 1f)
             {
+                agent.isStopped = false;
                 agent.SetDestination(waiting_destination);
             }
             else
