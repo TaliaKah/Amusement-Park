@@ -101,7 +101,7 @@ public class Visitor : MonoBehaviour
         agent.isStopped = true;
     }
 
-    double threshold = 1.0;
+    double threshold = 3.0;
 
     // Start is called before the first frame update
     void Start()
@@ -125,7 +125,7 @@ public class Visitor : MonoBehaviour
         state = State.On_their_way;
     }
 
-    private float distanceBehindLastVisitor = 2f;
+    private float distanceBehindLastVisitor = 4f;
 
     // Update is called once per frame
     void Update()
