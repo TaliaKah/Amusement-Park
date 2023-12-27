@@ -19,6 +19,7 @@ public class Visitor : MonoBehaviour
     }
 
     private State state;
+    private Visitor target;
 
     public void Update_state()
     {
@@ -163,16 +164,22 @@ public class Visitor : MonoBehaviour
             Mathf.Abs(transform.position.z - destination.z) < threshold &&
             state == State.On_their_way)
         {
+            target = entranceScript.Get_last_visitor();
             Go_to_waiting_queue();
             agent.SetDestination(destination);
             Update_state();
         }
         if (state == State.Waiting)
         {
-            Vector3 waiting_destination = entranceScript.Get_waiting_position() - (transform.forward * distanceBehindLastVisitor);
-            agent.SetDestination(waiting_destination);
-            if (Mathf.Abs(transform.position.x - destination.x) < distanceBehindLastVisitor &&
-                Mathf.Abs(transform.position.z - destination.z) < distanceBehindLastVisitor)
+            Vector3 waiting_destination = 
+                (target == null) ?
+                    entranceScript.Get_entrance_position() :
+                    target.transform.position - (transform.forward * distanceBehindLastVisitor);
+            if (Vector3.Distance(transform.position, waiting_destination) > distanceBehindLastVisitor)
+            {
+                agent.SetDestination(waiting_destination);
+            }
+            else
             {
                 Stopmoving();
             }
