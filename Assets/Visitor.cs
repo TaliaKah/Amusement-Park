@@ -5,43 +5,47 @@ using UnityEngine;
 public class Visitor : MonoBehaviour
 {
     public GameObject door;
-
     private UnityEngine.AI.NavMeshAgent agent;
     private Entrance entranceScript;
+    private POIManager poiManager;
 
     private Vector3 destination;
+    private State state;
+    private Visitor target;
+    private int poiIndex;
+    
+    private double threshold = 3.0;
+    private float distanceBehindLastVisitor = 4f;
 
-    enum State{
+    enum State
+    {
         In_attraction,
         Waiting,
         Leaving,
         On_their_way,
     }
 
-    private State state;
-    private Visitor target;
-
     public void Update_state()
     {
-        switch(state)
+        switch (state)
         {
-            case State.On_their_way :
+            case State.On_their_way:
                 state = State.Waiting;
-                Debug.Log("State : Waiting");
+                Debug.Log("State: Waiting");
                 break;
-            case State.Waiting : 
+            case State.Waiting:
                 state = State.In_attraction;
                 gameObject.SetActive(false);
-                Debug.Log("State : In attraction");
+                //Debug.Log("State: In attraction");
                 break;
-            case State.In_attraction :
+            case State.In_attraction:
                 state = State.Leaving;
                 gameObject.SetActive(true);
-                Debug.Log("State : Leaving");
+                //Debug.Log("State: Leaving");
                 break;
-            case State.Leaving :
+            case State.Leaving:
                 state = State.On_their_way;
-                Debug.Log("State : On_their_Way"); 
+                //Debug.Log("State: On_their_Way");
                 break;
         }
     }
@@ -51,73 +55,51 @@ public class Visitor : MonoBehaviour
         transform.position = position;
     }
 
-    private int poiIndex;
-
-    private void Set_destination(){
-        GameObject poiManagerObject = GameObject.Find("POIManager");
-        if (poiManagerObject != null) {
-            POIManager poiManager = poiManagerObject.GetComponent<POIManager>();
-            if (poiManager != null) {
-                List<Vector3> POIs_position = poiManager.POIs_position;
-                if (POIs_position.Count > 0) {
-                    poiIndex = new System.Random().Next(0, POIs_position.Count);
-                    destination = POIs_position[poiIndex];
-                    agent.SetDestination(destination);
-                }
-            }
+    private void Set_destination()
+    {
+        List<Vector3> POIs_position = poiManager.POIs_position;
+        if (POIs_position.Count > 0)
+        {
+            poiIndex = new System.Random().Next(0, POIs_position.Count);
+            destination = POIs_position[poiIndex];
+            agent.SetDestination(destination);
         }
     }
 
     private void Go_to_waiting_queue()
     {
-        GameObject poiManagerObject = GameObject.Find("POIManager");
-        if (poiManagerObject != null) {
-            POIManager poiManager = poiManagerObject.GetComponent<POIManager>();
-            if (poiManager != null) {
-                int index = poiIndex + 1;
-                POI poi = poiManager.transform.Find("POI "+ index).GetComponent<POI>();
-                if (poi != null)
-                {
-                    entranceScript = poi.GetComponentInChildren<Entrance>();
+        int index = poiIndex + 1;
+        POI poi = poiManager.transform.Find("POI " + index).GetComponent<POI>();
+        entranceScript = poi?.GetComponentInChildren<Entrance>();
 
-                    if (entranceScript != null)
-                    {
-                        entranceScript.Visitor_reach_the_queue(this);
-                        Debug.Log(this.name + " enters the waiting queue");
-                        Debug.Log("Number of element in waiting queue in POI " + index + entranceScript.Get_queue().Count);
-                    }
-                    else
-                    {
-                        Debug.LogError("Entrance script not found!");
-                    }
-                }
-            }
+        if (entranceScript != null)
+        {
+            entranceScript.Visitor_reach_the_queue(this);
+            Debug.Log(this.name + " enters the waiting queue");
+            Debug.Log("Number of elements in waiting queue in POI " + index + entranceScript.Get_queue().Count);
+        }
+        else
+        {
+            Debug.LogError("Entrance script not found!");
         }
     }
 
     private void Stopmoving()
     {
-        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         agent.isStopped = true;
     }
-
-    double threshold = 3.0;
 
     // Start is called before the first frame update
     void Start()
     {
-        GameObject poiManagerObject = GameObject.Find("POIManager");
-        if (poiManagerObject != null) {
-            POIManager poiManager = poiManagerObject.GetComponent<POIManager>();
-            if (poiManager != null) {
-                int index = poiIndex + 1;
-                POI poi = poiManager.transform.Find("POI "+ index).GetComponent<POI>();
-                if (poi != null)
-                {
-                    entranceScript = poi.GetComponentInChildren<Entrance>();
-                }
-            }
+        poiManager = GameObject.FindObjectOfType<POIManager>();
+
+        if (poiManager == null)
+        {
+            Debug.LogError("POIManager not found!");
+            return;
         }
+
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         transform.position = door.transform.position;
         transform.rotation = door.transform.rotation;
@@ -125,38 +107,29 @@ public class Visitor : MonoBehaviour
         state = State.On_their_way;
     }
 
-    private float distanceBehindLastVisitor = 4f;
-
     // Update is called once per frame
     void Update()
     {
-        if (state == State.Leaving){
+        if (state == State.Leaving)
+        {
             Set_destination();
             Update_state();
         }
 
-        if (state == State.On_their_way){        
-            GameObject poiManagerObject = GameObject.Find("POIManager");
-            if (poiManagerObject != null) {
-                POIManager poiManager = poiManagerObject.GetComponent<POIManager>();
-                if (poiManager != null) {
-                    int index = poiIndex + 1;
-                    POI poi = poiManager.transform.Find("POI "+ index).GetComponent<POI>();
-                    if (poi != null)
-                    {
-                        entranceScript = poi.GetComponentInChildren<Entrance>();
+        if (state == State.On_their_way)
+        {
+            int index = poiIndex + 1;
+            POI poi = poiManager.transform.Find("POI " + index).GetComponent<POI>();
+            entranceScript = poi?.GetComponentInChildren<Entrance>();
 
-                        if (entranceScript != null)
-                        {
-                            destination = entranceScript.Get_waiting_position_at_the_end_of_the_file(distanceBehindLastVisitor);
-                            agent.SetDestination(destination);
-                        }
-                        else
-                        {
-                            Debug.LogError("Entrance script not found!");
-                        }
-                    }
-                }
+            if (entranceScript != null)
+            {
+                destination = entranceScript.Get_waiting_position_at_the_end_of_the_file(distanceBehindLastVisitor);
+                agent.SetDestination(destination);
+            }
+            else
+            {
+                Debug.LogError("Entrance script not found!");
             }
         }
 
@@ -171,7 +144,7 @@ public class Visitor : MonoBehaviour
         }
         if (state == State.Waiting)
         {
-            Vector3 waiting_destination = 
+            Vector3 waiting_destination =
                 (target == null) ?
                     entranceScript.Get_entrance_position() :
                     target.transform.position - (transform.forward * distanceBehindLastVisitor);
