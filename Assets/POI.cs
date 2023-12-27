@@ -52,6 +52,10 @@ public class POI : MonoBehaviour
         {
             foreach (var visitor in visitorEntrance.Get_queue())
             {
+                if (visitor_in_attraction.Count >= maxVisitors)
+                {
+                    break;
+                }
                 visitor_in_attraction.Add(visitor, 0.0f);
                 visitorsToRemove.Add(visitor);
                 visitorsToUpdateState.Add(visitor);
