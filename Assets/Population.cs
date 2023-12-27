@@ -13,6 +13,7 @@ public class Population : MonoBehaviour
         for (int i = 0; i < numberOfVisitors - 1; i++)
         {
             GameObject newVisitor = Instantiate(visitorPrefab, visitorPrefab.transform.position, Quaternion.identity);
+            newVisitor.name = "Visitor " + i;
             newVisitor.transform.parent = transform;
         }
     }
