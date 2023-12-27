@@ -133,11 +133,38 @@ public class Visitor : MonoBehaviour
             Set_destination();
             Update_state();
         }
+
+        if (state == State.On_their_way){        
+            GameObject poiManagerObject = GameObject.Find("POIManager");
+            if (poiManagerObject != null) {
+                POIManager poiManager = poiManagerObject.GetComponent<POIManager>();
+                if (poiManager != null) {
+                    int index = poiIndex + 1;
+                    POI poi = poiManager.transform.Find("POI "+ index).GetComponent<POI>();
+                    if (poi != null)
+                    {
+                        entranceScript = poi.GetComponentInChildren<Entrance>();
+
+                        if (entranceScript != null)
+                        {
+                            destination = entranceScript.Get_waiting_position_at_the_end_of_the_file(distanceBehindLastVisitor);
+                            agent.SetDestination(destination);
+                        }
+                        else
+                        {
+                            Debug.LogError("Entrance script not found!");
+                        }
+                    }
+                }
+            }
+        }
+
         if (Mathf.Abs(transform.position.x - destination.x) < threshold &&
             Mathf.Abs(transform.position.z - destination.z) < threshold &&
             state == State.On_their_way)
         {
             Go_to_waiting_queue();
+            agent.SetDestination(destination);
             Update_state();
         }
         if (state == State.Waiting)
