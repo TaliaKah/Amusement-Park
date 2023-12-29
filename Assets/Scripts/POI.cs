@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class POI : MonoBehaviour
 {
-    public float visitDuration = 5.0f; // en frames
+    public float visitDuration = 5.0f;
     public int maxVisitors = 5;
 
     private Dictionary<Visitor, float> visitorsInAttraction = new Dictionary<Visitor, float>();
@@ -13,9 +13,7 @@ public class POI : MonoBehaviour
     private void Start()
     {
         entrance = GetComponentInChildren<Entrance>();
-        Debug.Log("Entrance pos: " + entrance.transform.position);
         exit = GetComponentInChildren<Exit>();
-        Debug.Log("Exit pos: " + exit.transform.position);
     }
 
     public Vector3 GetPosition(string tag)
@@ -80,9 +78,9 @@ public class POI : MonoBehaviour
         List<Visitor> currentVisitors = new List<Visitor>(visitorsInAttraction.Keys);
         foreach (var key in currentVisitors)
         {
-            visitorsInAttraction[key] += Time.deltaTime; // Increment the visit duration.
+            visitorsInAttraction[key] += Time.deltaTime; // Incrémenter la durée de visite du visiteur
 
-            if (visitorsInAttraction[key] >= visitDuration) // On ajoutera qu'il faudra que la sortie soit libre peut-être
+            if (visitorsInAttraction[key] >= visitDuration)
             {
                 visitorsToRemove.Add(key);
                 visitorsToUpdate.Add(key);
@@ -99,7 +97,6 @@ public class POI : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     private void Update()
     {
         VisitorsLeftTheAttraction(exit);

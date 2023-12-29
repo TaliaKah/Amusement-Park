@@ -49,10 +49,6 @@ public class Visitor : MonoBehaviour
                 break;
             case State.Leaving:
                 state = (wanderingProbability < Random.Range(0f, 1f)) ? State.OnTheirWay : State.Wandering;
-                if (state == State.Wandering)
-                {
-                    Debug.Log(name + " is wandering");
-                }
                 break;
         }
     }
@@ -124,7 +120,6 @@ public class Visitor : MonoBehaviour
             else
             {
                 SetRandomDestination();
-                Debug.Log(name + " is wandering");
             }
             timer = 0f;
         }
@@ -142,7 +137,6 @@ public class Visitor : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     private void Start()
     {
         poiManager = FindObjectOfType<POIManager>();
@@ -160,7 +154,6 @@ public class Visitor : MonoBehaviour
         state = State.OnTheirWay;
     }
 
-    // Update is called once per frame
     private void Update()
     {
         if (state == State.Leaving)
