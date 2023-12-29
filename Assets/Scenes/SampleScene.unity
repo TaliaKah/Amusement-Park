@@ -1363,6 +1363,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   door: {fileID: 1485416022}
+  WanderingProbability: 0.3
+  wanderingRadius: 30
+  WanderingInterval: 2
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

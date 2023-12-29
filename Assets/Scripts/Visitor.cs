@@ -23,6 +23,7 @@ public class Visitor : MonoBehaviour
         Waiting,
         Leaving,
         On_their_way,
+        Wandering,
     }
 
     public void Update_state()
@@ -31,7 +32,7 @@ public class Visitor : MonoBehaviour
         {
             case State.On_their_way:
                 state = State.Waiting;
-                Debug.Log("State: Waiting");
+                // Debug.Log("State: Waiting");
                 break;
             case State.Waiting:
                 state = State.In_attraction;
@@ -44,7 +45,11 @@ public class Visitor : MonoBehaviour
                 //Debug.Log("State: Leaving");
                 break;
             case State.Leaving:
-                state = State.On_their_way;
+                state = (WanderingProbability < Random.Range(0f, 1f)) ? 
+                State.On_their_way : State.Wandering;
+                if (state == State.Wandering){ 
+                    Debug.Log(name + " is wandering");
+                }
                 //Debug.Log("State: On_their_Way");
                 break;
         }
@@ -80,8 +85,8 @@ public class Visitor : MonoBehaviour
         if (entranceScript != null)
         {
             entranceScript.Visitor_reach_the_queue(this);
-            Debug.Log(this.name + " enters the waiting queue");
-            Debug.Log("Number of elements in waiting queue in POI " + index + entranceScript.Get_queue().Count);
+            // Debug.Log(this.name + " enters the waiting queue");
+            // Debug.Log("Number of elements in waiting queue in POI " + index + entranceScript.Get_queue().Count);
         }
         else
         {
@@ -93,6 +98,58 @@ public class Visitor : MonoBehaviour
     {
         agent.isStopped = true;
     }
+
+    public float WanderingProbability = 0.5f;
+    public float wanderingRadius = 10f;  
+    public float WanderingInterval = 30f; 
+
+    private float timer = 0f;
+
+    Vector3 GetRandomPointOnNavMesh()
+    {
+        UnityEngine.AI.NavMeshHit hit;
+        Vector3 randomPoint = Vector3.zero;
+
+        // Essayez de trouver un point aléatoire sur le navmesh
+        if (UnityEngine.AI.NavMesh.SamplePosition(transform.position, out hit, 500.0f, UnityEngine.AI.NavMesh.AllAreas))
+        {
+            randomPoint = hit.position;
+        }
+
+        return randomPoint;
+    }
+
+    void UpdateWandering()
+    { 
+        // Si le NavMesh Agent a atteint sa destination ou si le temps d'attente est écoulé
+        if (!agent.pathPending && agent.remainingDistance < 0.1f && timer >= WanderingInterval)
+        {
+            if (timer >= 6* timer && WanderingProbability < Random.Range(0f, 1f))
+            {
+                Set_destination();
+                state = State.On_their_way; 
+            }
+            else
+            {
+                SetRandomDestination();
+                Debug.Log(name + " is wandering");
+            }
+            timer = 0f;
+        }
+        timer += Time.deltaTime;
+    }
+
+    void SetRandomDestination()
+    {
+        UnityEngine.AI.NavMeshHit hit;
+        Vector3 randomPosition = transform.position + Random.insideUnitSphere * wanderingRadius;
+        
+        if (UnityEngine.AI.NavMesh.SamplePosition(randomPosition, out hit, wanderingRadius, UnityEngine.AI.NavMesh.AllAreas))
+        {
+            agent.SetDestination(hit.position);
+        }
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -108,8 +165,16 @@ public class Visitor : MonoBehaviour
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         transform.position = door.transform.position;
         transform.rotation = door.transform.rotation;
-        Set_destination();
-        state = State.On_their_way;
+        // if (WanderingProbability > Random.Range(0f, 1f))
+        // {
+        //     SetRandomDestination();
+        //     state = State.Wandering;
+        // }
+        // else
+        // {
+            Set_destination();
+            state = State.On_their_way;
+        // }
     }
 
     // Update is called once per frame
@@ -162,6 +227,10 @@ public class Visitor : MonoBehaviour
             {
                 Stopmoving();
             }
+        }
+        if (state == State.Wandering)
+        {
+            UpdateWandering();
         }
     }
 }
