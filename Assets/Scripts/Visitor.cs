@@ -14,8 +14,8 @@ public class Visitor : MonoBehaviour
     private Visitor target;
     private int poiIndex;
 
-    private double threshold = 3.0;
-    private float distanceBehindLastVisitor = 4f;
+    public double threshold = 3.0;
+    public float distanceBehindLastVisitor = 3f;
 
     enum State
     {
@@ -124,7 +124,7 @@ public class Visitor : MonoBehaviour
         // Si le NavMesh Agent a atteint sa destination ou si le temps d'attente est écoulé
         if (!agent.pathPending && agent.remainingDistance < 0.1f && timer >= WanderingInterval)
         {
-            if (timer >= 6* timer && WanderingProbability < Random.Range(0f, 1f))
+            if (timer >= 6* timer)
             {
                 Set_destination();
                 state = State.On_their_way; 

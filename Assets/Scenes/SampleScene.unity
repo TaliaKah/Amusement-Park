@@ -149,7 +149,7 @@ Transform:
   m_GameObject: {fileID: 37174891}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 48.8, y: 34.5, z: -8.5}
+  m_LocalPosition: {x: 10.6, y: 42.57, z: 18.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -908,8 +908,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3be2f581c83374caf4127493f7aebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visitDuration: 10
-  maxVisitors: 5
+  visitDuration: 15
+  maxVisitors: 10
 --- !u!1 &551824236
 GameObject:
   m_ObjectHideFlags: 0
@@ -1173,8 +1173,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3be2f581c83374caf4127493f7aebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visitDuration: 20
-  maxVisitors: 5
+  visitDuration: 25
+  maxVisitors: 12
 --- !u!1 &667562694
 GameObject:
   m_ObjectHideFlags: 0
@@ -1200,8 +1200,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 667562694}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -29.38, y: -38.39, z: 51.82}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -13.6, y: -24.82, z: 58.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1250,7 +1250,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1.2
-  m_Speed: 21.2
+  m_Speed: 10
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -1361,7 +1361,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   door: {fileID: 1485416022}
-  WanderingProbability: 0.3
+  threshold: 3
+  distanceBehindLastVisitor: 4
+  WanderingProbability: 0.1
   wanderingRadius: 30
   WanderingInterval: 2
 --- !u!1 &705507993
@@ -1573,6 +1575,7 @@ GameObject:
   - component: {fileID: 818335821}
   - component: {fileID: 818335818}
   - component: {fileID: 818335817}
+  - component: {fileID: 818335822}
   m_Layer: 0
   m_Name: Attraction
   m_TagString: Untagged
@@ -1588,13 +1591,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 818335814}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: -0.2754696, z: 0, w: 0.9613098}
   m_LocalPosition: {x: 0, y: 41, z: -5.5}
   m_LocalScale: {x: 49.499996, y: 102.5, z: 49.499996}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1434430026}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -31.98, z: 0}
 --- !u!208 &818335817
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -1684,6 +1687,22 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.00000029802322, y: 0, z: 0.0000003874302}
+--- !u!114 &818335822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818335814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Size: {x: 1.77, y: 0.46000004, z: 1.3}
+  m_Center: {x: 0, y: -0.52, z: 0.22292417}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2148,8 +2167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3be2f581c83374caf4127493f7aebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visitDuration: 20
-  maxVisitors: 5
+  visitDuration: 10
+  maxVisitors: 4
 --- !u!1 &1476542212
 GameObject:
   m_ObjectHideFlags: 0
@@ -2368,7 +2387,7 @@ Transform:
   m_GameObject: {fileID: 1558631140}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.1, y: -27.33, z: 59.71}
+  m_LocalPosition: {x: -38.92, y: -33.91, z: 42.12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2813,8 +2832,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3be2f581c83374caf4127493f7aebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visitDuration: 20
-  maxVisitors: 5
+  visitDuration: 10
+  maxVisitors: 8
 --- !u!1 &1812119597
 GameObject:
   m_ObjectHideFlags: 0
@@ -3398,6 +3417,7 @@ GameObject:
   - component: {fileID: 2116322144}
   - component: {fileID: 2116322142}
   - component: {fileID: 2116322146}
+  - component: {fileID: 2116322147}
   m_Layer: 0
   m_Name: Attraction
   m_TagString: Untagged
@@ -3509,6 +3529,22 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0.000000059604645, z: -0.00000023841858}
+--- !u!114 &2116322147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116322139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Size: {x: 0.72, y: 0.83, z: 0.94}
+  m_Center: {x: 0.03, y: 0.22, z: -0.15}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
