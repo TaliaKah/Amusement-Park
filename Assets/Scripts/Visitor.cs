@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class Visitor : MonoBehaviour
 {
-    public GameObject door;
     private NavMeshAgent agent;
     private Entrance entranceScript;
     private POIManager poiManager;
@@ -68,6 +67,11 @@ public class Visitor : MonoBehaviour
     public State GetState()
     {
         return state;
+    }
+
+    public void InitState()
+    {
+        state = State.Leaving;
     }
 
     public bool IsItTimeToWander()
@@ -176,7 +180,7 @@ public class Visitor : MonoBehaviour
                 target.transform.position - (transform.forward * distanceBehindLastVisitor);
     }
 
-    private void Start()
+    public void InitializeVisitor()
     {
         poiManager = FindObjectOfType<POIManager>();
 
@@ -187,11 +191,12 @@ public class Visitor : MonoBehaviour
         }
 
         agent = GetComponent<NavMeshAgent>();
-        
-        transform.position = door.transform.position;
-        transform.rotation = door.transform.rotation;
-        state = State.Leaving;
-        UpdateState();
+        InitState();
+    }
+
+    private void Start()
+    {
+        InitializeVisitor();
     }
 
     private void Update()

@@ -6,14 +6,20 @@ public class Population : MonoBehaviour
 {
     public int numberOfVisitorsAtTheBeginning = 10;
     public GameObject visitorPrefab;
-    private int numberOfVisitors = 1; // Car notre modèle est un visiteur aussi
+    public GameObject door;
+
+    private int numberOfVisitors = 0;
 
     public void CreateVisitor()
     {
+        visitorPrefab.SetActive(true);
         GameObject newVisitor = Instantiate(visitorPrefab, visitorPrefab.transform.position, Quaternion.identity);
+        newVisitor.transform.position = door.transform.position;
+        newVisitor.transform.rotation = door.transform.rotation;
         numberOfVisitors++;
         newVisitor.name = "Visitor " + numberOfVisitors;
-        newVisitor.transform.parent = transform; 
+        newVisitor.transform.parent = transform;
+        visitorPrefab.SetActive(false);
     }
 
     public void Create25Visitors()

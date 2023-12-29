@@ -214,6 +214,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfVisitorsAtTheBeginning: 100
   visitorPrefab: {fileID: 687772920}
+  door: {fileID: 1485416022}
 --- !u!1 &70268847
 GameObject:
   m_ObjectHideFlags: 0
@@ -1236,7 +1237,7 @@ GameObject:
   - component: {fileID: 687772921}
   - component: {fileID: 687772926}
   m_Layer: 0
-  m_Name: Visitor
+  m_Name: VisitorModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1344,7 +1345,7 @@ Transform:
   m_GameObject: {fileID: 687772920}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -30.7, y: 1.75, z: -178.7}
   m_LocalScale: {x: 1.65, y: 1.65, z: 1.65}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1362,7 +1363,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81f0811af1bad85478e1679f0ce30946, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  door: {fileID: 1485416022}
   state: 2
   threshold: 3
   distanceBehindLastVisitor: 5
@@ -3512,7 +3512,7 @@ SceneRoots:
   - {fileID: 963194228}
   - {fileID: 705507995}
   - {fileID: 1523853460}
-  - {fileID: 53012927}
   - {fileID: 1502033528}
+  - {fileID: 53012927}
   - {fileID: 976575554}
   - {fileID: 1476542213}
