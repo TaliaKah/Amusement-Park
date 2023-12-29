@@ -6,6 +6,8 @@ public class POI : MonoBehaviour
     public float visitDuration = 5.0f;
     public int maxVisitors = 5;
 
+    public float threshold = 6f;
+
     private Dictionary<Visitor, float> visitorsInAttraction = new Dictionary<Visitor, float>();
     private Entrance entrance;
     private Exit exit;
@@ -54,7 +56,7 @@ public class POI : MonoBehaviour
                 {
                     visitor.SetTargetToNull();
                     break;
-                }
+                }             
                 visitorsInAttraction.Add(visitor, 0.0f);
                 visitorsToRemove.Add(visitor);
                 visitorsToUpdateState.Add(visitor);
@@ -65,7 +67,27 @@ public class POI : MonoBehaviour
             }
             foreach (Visitor visitor in visitorsToUpdateState)
             {
+                visitor.SetTargetToNull();
                 visitor.UpdateState();
+            }
+        }
+    }
+
+
+    private void AddAVisitorInAttraction(Entrance visitorEntrance)
+    {
+        if (visitorsInAttraction.Count < maxVisitors)
+        {
+            if (!visitorEntrance.QueueIsEmpty())
+            {
+                Visitor visitor = visitorEntrance.GetQueue()[0];
+                if (Mathf.Abs(visitor.transform.position.x - visitorEntrance.GetEntrancePosition().x) < threshold &&
+                    Mathf.Abs(visitor.transform.position.z - visitorEntrance.GetEntrancePosition().z) < threshold)
+                {                
+                    visitorsInAttraction.Add(visitor, 0.0f);
+                    visitorEntrance.VisitorLeftTheQueue(visitor);
+                    visitor.UpdateState();
+                }
             }
         }
     }
@@ -100,6 +122,6 @@ public class POI : MonoBehaviour
     private void Update()
     {
         VisitorsLeftTheAttraction(exit);
-        FillTheAttraction(entrance);
+        AddAVisitorInAttraction(entrance);
     }
 }

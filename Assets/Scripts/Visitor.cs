@@ -11,7 +11,7 @@ public class Visitor : MonoBehaviour
     private POIManager poiManager;
 
     private Vector3 destination;
-    private State state = State.Leaving;
+    public State state;
     private Visitor target;
     private int poiIndex;
 
@@ -25,7 +25,7 @@ public class Visitor : MonoBehaviour
     private float intervalTimer = 0f;
     private float wanderingTimer = 0f;
 
-    enum State
+    public enum State
     {
         InAttraction,
         Waiting,
@@ -43,6 +43,7 @@ public class Visitor : MonoBehaviour
                 break;
             case State.Waiting:
                 state = State.InAttraction;
+                SetTargetToNull();
                 gameObject.SetActive(false);
                 break;
             case State.InAttraction:
@@ -62,6 +63,11 @@ public class Visitor : MonoBehaviour
                 SetDestination();
                 break;
         }
+    }
+
+    public State GetState()
+    {
+        return state;
     }
 
     public bool IsItTimeToWander()
@@ -163,7 +169,7 @@ public class Visitor : MonoBehaviour
                 Mathf.Abs(transform.position.z - destination.z) < threshold;
     }
 
-    Vector3 WaitingDestination()
+    private Vector3 WaitingDestination()
     {
         return (target == null) ?
                 entranceScript.GetEntrancePosition() :
@@ -184,7 +190,7 @@ public class Visitor : MonoBehaviour
         
         transform.position = door.transform.position;
         transform.rotation = door.transform.rotation;
-
+        state = State.Leaving;
         UpdateState();
     }
 
@@ -207,6 +213,13 @@ public class Visitor : MonoBehaviour
         }
         if (state == State.Waiting)
         {
+            if (target != null)
+            {
+                if (target.GetState() != State.Waiting)
+                {
+                    target = null;
+                }
+            }
             Vector3 waitingDestination = WaitingDestination();
             if (Vector3.Distance(transform.position, waitingDestination) > distanceBehindLastVisitor)
             {
