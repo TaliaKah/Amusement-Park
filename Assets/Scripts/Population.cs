@@ -4,17 +4,32 @@ using UnityEngine;
 
 public class Population : MonoBehaviour
 {
-    public int numberOfVisitors = 10;
+    public int numberOfVisitorsAtTheBeginning = 10;
     public GameObject visitorPrefab;
+    private int numberOfVisitors = 1; // Car notre modèle est un visiteur aussi
+
+    public void Create_visitor()
+    {
+        GameObject newVisitor = Instantiate(visitorPrefab, visitorPrefab.transform.position, Quaternion.identity);
+        numberOfVisitors++;
+        newVisitor.name = "Visitor " + numberOfVisitors;
+        newVisitor.transform.parent = transform; 
+    }
+
+    public void Create_25_visitors()
+    {
+        for (int i = 0; i < 25; i++)
+        {
+            Create_visitor();
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < numberOfVisitors - 1; i++)
+        for (int i = 0; i < numberOfVisitorsAtTheBeginning - 1; i++)
         {
-            GameObject newVisitor = Instantiate(visitorPrefab, visitorPrefab.transform.position, Quaternion.identity);
-            newVisitor.name = "Visitor " + i;
-            newVisitor.transform.parent = transform;
+            Create_visitor();
         }
     }
 
