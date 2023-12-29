@@ -165,16 +165,6 @@ public class Visitor : MonoBehaviour
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         transform.position = door.transform.position;
         transform.rotation = door.transform.rotation;
-        // if (WanderingProbability > Random.Range(0f, 1f))
-        // {
-        //     SetRandomDestination();
-        //     state = State.Wandering;
-        // }
-        // else
-        // {
-            Set_destination();
-            state = State.On_their_way;
-        // }
     }
 
     // Update is called once per frame
