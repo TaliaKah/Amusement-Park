@@ -149,7 +149,7 @@ Transform:
   m_GameObject: {fileID: 37174891}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.6, y: 42.57, z: 19.6}
+  m_LocalPosition: {x: 10.6, y: 44.22, z: 17.28}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -481,7 +481,7 @@ Transform:
   m_GameObject: {fileID: 312014034}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -47.3, y: 16.1, z: -11.5}
+  m_LocalPosition: {x: -48.14, y: 26.05, z: -11.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -910,6 +910,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visitDuration: 15
   maxVisitors: 10
+  threshold: 6
 --- !u!1 &551824236
 GameObject:
   m_ObjectHideFlags: 0
@@ -1175,6 +1176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visitDuration: 25
   maxVisitors: 12
+  threshold: 6
 --- !u!1 &667562694
 GameObject:
   m_ObjectHideFlags: 0
@@ -1361,9 +1363,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   door: {fileID: 1485416022}
+  state: 2
   threshold: 3
   distanceBehindLastVisitor: 5
-  wanderingProbability: 0.1
+  wanderingProbability: 0.3
   wanderingRadius: 100
   wanderingUpdatePath: 4
   wanderingTime: 10
@@ -1970,7 +1973,7 @@ Transform:
   m_GameObject: {fileID: 1213546733}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -39.3, y: -40.69, z: 6.67}
+  m_LocalPosition: {x: -40.3, y: -22.15, z: -4.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2170,6 +2173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visitDuration: 10
   maxVisitors: 4
+  threshold: 6
 --- !u!1 &1476542212
 GameObject:
   m_ObjectHideFlags: 0
@@ -2258,8 +2262,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1502033527}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 345.6538, y: 18.043753, z: 71.150856}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 345.6538, y: 18.043753, z: 71.15085}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2813,7 +2817,7 @@ Transform:
   m_GameObject: {fileID: 1802166325}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.6422729, z: -0, w: 0.7664761}
-  m_LocalPosition: {x: -206.9, y: -41.5, z: -315.1}
+  m_LocalPosition: {x: -210.8, y: -41.5, z: -309.2}
   m_LocalScale: {x: 0.82, y: 0.82, z: 0.82}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -2836,6 +2840,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visitDuration: 10
   maxVisitors: 8
+  threshold: 6
 --- !u!1 &1854278683
 GameObject:
   m_ObjectHideFlags: 0
