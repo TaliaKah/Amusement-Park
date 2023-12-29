@@ -11,7 +11,7 @@ public class Visitor : MonoBehaviour
     private POIManager poiManager;
 
     private Vector3 destination;
-    private State state;
+    private State state = State.Leaving;
     private Visitor target;
     private int poiIndex;
 
@@ -19,9 +19,11 @@ public class Visitor : MonoBehaviour
     public float distanceBehindLastVisitor = 3f;
     public float wanderingProbability = 0.1f;
     public float wanderingRadius = 100f;
-    public float wanderingInterval = 2f;
+    public float wanderingUpdatePath = 2f;
+    public float wanderingTime = 10f;
 
-    private float timer = 0f;
+    private float intervalTimer = 0f;
+    private float wanderingTimer = 0f;
 
     enum State
     {
@@ -48,9 +50,28 @@ public class Visitor : MonoBehaviour
                 gameObject.SetActive(true);
                 break;
             case State.Leaving:
-                state = (wanderingProbability < Random.Range(0f, 1f)) ? State.OnTheirWay : State.Wandering;
+                state = (IsItTimeToWander()) ? State.Wandering : State.OnTheirWay;
+                SetDestination();
+                break;
+            case State.Wandering:
+                if (IsItTimeToStopWandering())
+                {
+                    state = State.OnTheirWay;
+                    wanderingTimer = 0f;
+                }
+                SetDestination();
                 break;
         }
+    }
+
+    public bool IsItTimeToWander()
+    {
+        return wanderingProbability < Random.Range(0f, 1f);
+    }
+
+    public bool IsItTimeToStopWandering()
+    {
+        return wanderingTimer > wanderingTime;
     }
 
     public void SetPosition(Vector3 position)
@@ -65,6 +86,18 @@ public class Visitor : MonoBehaviour
 
     private void SetDestination()
     {
+        if (state == State.OnTheirWay)
+        {
+            SetDestinationToPOI();
+        }
+        if (state == State.Wandering)
+        {
+            SetRandomDestination();
+        }
+    }
+
+    private void SetDestinationToPOI()
+    {
         List<Vector3> POIsPosition = poiManager.POIsPosition;
         if (POIsPosition.Count > 0)
         {
@@ -72,58 +105,6 @@ public class Visitor : MonoBehaviour
             destination = POIsPosition[poiIndex];
             agent.SetDestination(destination);
         }
-    }
-
-    private void GoToWaitingQueue()
-    {
-        int index = poiIndex + 1;
-        POI poi = poiManager.transform.Find("POI " + index).GetComponent<POI>();
-        entranceScript = poi?.GetComponentInChildren<Entrance>();
-
-        if (entranceScript != null)
-        {
-            entranceScript.VisitorReachTheQueue(this);
-        }
-        else
-        {
-            Debug.LogError("Entrance script not found!");
-        }
-    }
-
-    private void StopMoving()
-    {
-        agent.isStopped = true;
-    }
-
-    private Vector3 GetRandomPointOnNavMesh()
-    {
-        NavMeshHit hit;
-        Vector3 randomPoint = Vector3.zero;
-
-        if (NavMesh.SamplePosition(transform.position, out hit, 500.0f, NavMesh.AllAreas))
-        {
-            randomPoint = hit.position;
-        }
-
-        return randomPoint;
-    }
-
-    private void UpdateWandering()
-    {
-        if (!agent.pathPending && agent.remainingDistance < 0.1f && timer >= wanderingInterval)
-        {
-            if (timer >= 6 * timer)
-            {
-                SetDestination();
-                state = State.OnTheirWay;
-            }
-            else
-            {
-                SetRandomDestination();
-            }
-            timer = 0f;
-        }
-        timer += Time.deltaTime;
     }
 
     private void SetRandomDestination()
@@ -137,6 +118,58 @@ public class Visitor : MonoBehaviour
         }
     }
 
+    private void StopMoving()
+    {
+        agent.isStopped = true;
+    }
+
+    private void UpdateEntranceScript()
+    {
+        int index = poiIndex + 1;
+        POI poi = poiManager.transform.Find("POI " + index).GetComponent<POI>();
+        entranceScript = poi?.GetComponentInChildren<Entrance>();
+    }
+
+    private void SetDestinationToTheEndOfTheQueue()
+    {
+        UpdateEntranceScript();
+        if (entranceScript != null)
+        {
+            destination = entranceScript.GetWaitingPositionAtTheEndOfTheQueue(distanceBehindLastVisitor);
+            agent.SetDestination(destination);
+        }
+        else
+        {
+            Debug.LogError("Entrance script not found!");
+        }
+    }
+
+    private void EnterWaitingQueue()
+    {
+        UpdateEntranceScript();
+        if (entranceScript != null)
+        {
+            entranceScript.VisitorReachTheQueue(this);
+        }
+        else
+        {
+            Debug.LogError("Entrance script not found!");
+        }
+    }
+
+    private bool IsItCloseEnough()
+    {
+        return Mathf.Abs(transform.position.x - destination.x) < threshold &&
+                Mathf.Abs(transform.position.z - destination.z) < threshold;
+    }
+
+    Vector3 WaitingDestination()
+    {
+        return (target == null) ?
+                entranceScript.GetEntrancePosition() :
+                target.transform.position - (transform.forward * distanceBehindLastVisitor);
+    }
+
     private void Start()
     {
         poiManager = FindObjectOfType<POIManager>();
@@ -148,54 +181,34 @@ public class Visitor : MonoBehaviour
         }
 
         agent = GetComponent<NavMeshAgent>();
+        
         transform.position = door.transform.position;
         transform.rotation = door.transform.rotation;
-        SetDestination();
-        state = State.OnTheirWay;
+
+        UpdateState();
     }
 
     private void Update()
     {
         if (state == State.Leaving)
         {
-            SetDestination();
             UpdateState();
         }
 
         if (state == State.OnTheirWay)
         {
-            int index = poiIndex + 1;
-            POI poi = poiManager.transform.Find("POI " + index).GetComponent<POI>();
-            entranceScript = poi?.GetComponentInChildren<Entrance>();
-
-            if (entranceScript != null)
+            SetDestinationToTheEndOfTheQueue();
+            if (IsItCloseEnough())
             {
-                destination = entranceScript.GetWaitingPositionAtTheEndOfTheQueue(distanceBehindLastVisitor);
-                agent.SetDestination(destination);
-            }
-            else
-            {
-                Debug.LogError("Entrance script not found!");
+                target = entranceScript.GetLastVisitor();
+                EnterWaitingQueue();
+                UpdateState();
             }
         }
-
-        if (Mathf.Abs(transform.position.x - destination.x) < threshold &&
-            Mathf.Abs(transform.position.z - destination.z) < threshold &&
-            state == State.OnTheirWay)
-        {
-            target = entranceScript.GetLastVisitor();
-            GoToWaitingQueue();
-            agent.SetDestination(destination);
-            UpdateState();
-        }
-
         if (state == State.Waiting)
         {
-            Vector3 waitingDestination = (target == null) ?
-                entranceScript.GetEntrancePosition() :
-                target.transform.position - (transform.forward * distanceBehindLastVisitor);
-
-            if (Vector3.Distance(transform.position, waitingDestination) > 1f)
+            Vector3 waitingDestination = WaitingDestination();
+            if (Vector3.Distance(transform.position, waitingDestination) > distanceBehindLastVisitor)
             {
                 agent.isStopped = false;
                 agent.SetDestination(waitingDestination);
@@ -208,7 +221,13 @@ public class Visitor : MonoBehaviour
 
         if (state == State.Wandering)
         {
-            UpdateWandering();
+            intervalTimer += Time.deltaTime;
+            wanderingTimer += Time.deltaTime;
+            if ((!agent.pathPending && agent.remainingDistance < 0.1f) || intervalTimer >= wanderingUpdatePath)
+            {
+                UpdateState();
+                intervalTimer = 0f;
+            }
         }
     }
 }

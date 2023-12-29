@@ -1364,8 +1364,9 @@ MonoBehaviour:
   threshold: 3
   distanceBehindLastVisitor: 5
   wanderingProbability: 0.1
-  wanderingRadius: 30
-  wanderingInterval: 2
+  wanderingRadius: 100
+  wanderingUpdatePath: 4
+  wanderingTime: 10
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
