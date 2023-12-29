@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Visitor : MonoBehaviour
 {
     public GameObject door;
-    private UnityEngine.AI.NavMeshAgent agent;
+    private NavMeshAgent agent;
     private Entrance entranceScript;
     private POIManager poiManager;
 
@@ -16,67 +17,68 @@ public class Visitor : MonoBehaviour
 
     public double threshold = 3.0;
     public float distanceBehindLastVisitor = 3f;
+    public float wanderingProbability = 0.1f;
+    public float wanderingRadius = 100f;
+    public float wanderingInterval = 2f;
+
+    private float timer = 0f;
 
     enum State
     {
-        In_attraction,
+        InAttraction,
         Waiting,
         Leaving,
-        On_their_way,
+        OnTheirWay,
         Wandering,
     }
 
-    public void Update_state()
+    public void UpdateState()
     {
         switch (state)
         {
-            case State.On_their_way:
+            case State.OnTheirWay:
                 state = State.Waiting;
-                // Debug.Log("State: Waiting");
                 break;
             case State.Waiting:
-                state = State.In_attraction;
+                state = State.InAttraction;
                 gameObject.SetActive(false);
-                //Debug.Log("State: In attraction");
                 break;
-            case State.In_attraction:
+            case State.InAttraction:
                 state = State.Leaving;
                 gameObject.SetActive(true);
-                //Debug.Log("State: Leaving");
                 break;
             case State.Leaving:
-                state = (WanderingProbability < Random.Range(0f, 1f)) ? 
-                State.On_their_way : State.Wandering;
-                if (state == State.Wandering){ 
+                state = (wanderingProbability < Random.Range(0f, 1f)) ? State.OnTheirWay : State.Wandering;
+                if (state == State.Wandering)
+                {
                     Debug.Log(name + " is wandering");
                 }
-                //Debug.Log("State: On_their_Way");
                 break;
         }
     }
 
-    public void Set_position(Vector3 position)
+    public void SetPosition(Vector3 position)
     {
         transform.position = position;
     }
 
-    public void Set_target_to_null()
+    public void SetTargetToNull()
     {
         target = null;
     }
 
-    private void Set_destination()
+    private void SetDestination()
     {
-        List<Vector3> POIs_position = poiManager.POIs_position;
-        if (POIs_position.Count > 0)
+        List<Vector3> POIsPosition = poiManager.POIsPosition;
+        if (POIsPosition.Count > 0)
         {
-            poiIndex = new System.Random().Next(0, POIs_position.Count);
-            destination = POIs_position[poiIndex];
+            poiIndex = Random.Range(0, POIsPosition.Count);
+            destination = POIsPosition[poiIndex];
             agent.SetDestination(destination);
         }
     }
 
-    private void Go_to_waiting_queue()
+    private void GoToWaitingQueue()
     {
         int index = poiIndex + 1;
         POI poi = poiManager.transform.Find("POI " + index).GetComponent<POI>();
@@ -84,9 +86,7 @@ public class Visitor : MonoBehaviour
 
         if (entranceScript != null)
         {
-            entranceScript.Visitor_reach_the_queue(this);
-            // Debug.Log(this.name + " enters the waiting queue");
-            // Debug.Log("Number of elements in waiting queue in POI " + index + entranceScript.Get_queue().Count);
+            entranceScript.VisitorReachTheQueue(this);
         }
         else
         {
@@ -94,24 +94,17 @@ public class Visitor : MonoBehaviour
         }
     }
 
-    private void Stopmoving()
+    private void StopMoving()
     {
         agent.isStopped = true;
     }
 
-    public float WanderingProbability = 0.5f;
-    public float wanderingRadius = 10f;  
-    public float WanderingInterval = 30f; 
-
-    private float timer = 0f;
-
-    Vector3 GetRandomPointOnNavMesh()
+    private Vector3 GetRandomPointOnNavMesh()
     {
-        UnityEngine.AI.NavMeshHit hit;
+        NavMeshHit hit;
         Vector3 randomPoint = Vector3.zero;
 
-        // Essayez de trouver un point aléatoire sur le navmesh
-        if (UnityEngine.AI.NavMesh.SamplePosition(transform.position, out hit, 500.0f, UnityEngine.AI.NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(transform.position, out hit, 500.0f, NavMesh.AllAreas))
         {
             randomPoint = hit.position;
         }
@@ -119,15 +112,14 @@ public class Visitor : MonoBehaviour
         return randomPoint;
     }
 
-    void UpdateWandering()
-    { 
-        // Si le NavMesh Agent a atteint sa destination ou si le temps d'attente est écoulé
-        if (!agent.pathPending && agent.remainingDistance < 0.1f && timer >= WanderingInterval)
+    private void UpdateWandering()
+    {
+        if (!agent.pathPending && agent.remainingDistance < 0.1f && timer >= wanderingInterval)
         {
-            if (timer >= 6* timer)
+            if (timer >= 6 * timer)
             {
-                Set_destination();
-                state = State.On_their_way; 
+                SetDestination();
+                state = State.OnTheirWay;
             }
             else
             {
@@ -139,22 +131,21 @@ public class Visitor : MonoBehaviour
         timer += Time.deltaTime;
     }
 
-    void SetRandomDestination()
+    private void SetRandomDestination()
     {
-        UnityEngine.AI.NavMeshHit hit;
+        NavMeshHit hit;
         Vector3 randomPosition = transform.position + Random.insideUnitSphere * wanderingRadius;
-        
-        if (UnityEngine.AI.NavMesh.SamplePosition(randomPosition, out hit, wanderingRadius, UnityEngine.AI.NavMesh.AllAreas))
+
+        if (NavMesh.SamplePosition(randomPosition, out hit, wanderingRadius, NavMesh.AllAreas))
         {
             agent.SetDestination(hit.position);
         }
     }
 
-
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        poiManager = GameObject.FindObjectOfType<POIManager>();
+        poiManager = FindObjectOfType<POIManager>();
 
         if (poiManager == null)
         {
@@ -162,21 +153,23 @@ public class Visitor : MonoBehaviour
             return;
         }
 
-        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        agent = GetComponent<NavMeshAgent>();
         transform.position = door.transform.position;
         transform.rotation = door.transform.rotation;
+        SetDestination();
+        state = State.OnTheirWay;
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (state == State.Leaving)
         {
-            Set_destination();
-            Update_state();
+            SetDestination();
+            UpdateState();
         }
 
-        if (state == State.On_their_way)
+        if (state == State.OnTheirWay)
         {
             int index = poiIndex + 1;
             POI poi = poiManager.transform.Find("POI " + index).GetComponent<POI>();
@@ -184,7 +177,7 @@ public class Visitor : MonoBehaviour
 
             if (entranceScript != null)
             {
-                destination = entranceScript.Get_waiting_position_at_the_end_of_the_file(distanceBehindLastVisitor);
+                destination = entranceScript.GetWaitingPositionAtTheEndOfTheQueue(distanceBehindLastVisitor);
                 agent.SetDestination(destination);
             }
             else
@@ -195,29 +188,31 @@ public class Visitor : MonoBehaviour
 
         if (Mathf.Abs(transform.position.x - destination.x) < threshold &&
             Mathf.Abs(transform.position.z - destination.z) < threshold &&
-            state == State.On_their_way)
+            state == State.OnTheirWay)
         {
-            target = entranceScript.Get_last_visitor();
-            Go_to_waiting_queue();
+            target = entranceScript.GetLastVisitor();
+            GoToWaitingQueue();
             agent.SetDestination(destination);
-            Update_state();
+            UpdateState();
         }
+
         if (state == State.Waiting)
         {
-            Vector3 waiting_destination =
-                (target == null) ?
-                    entranceScript.Get_entrance_position() :
-                    target.transform.position - (transform.forward * distanceBehindLastVisitor);
-            if (Vector3.Distance(transform.position, waiting_destination) > 1f)
+            Vector3 waitingDestination = (target == null) ?
+                entranceScript.GetEntrancePosition() :
+                target.transform.position - (transform.forward * distanceBehindLastVisitor);
+
+            if (Vector3.Distance(transform.position, waitingDestination) > 1f)
             {
                 agent.isStopped = false;
-                agent.SetDestination(waiting_destination);
+                agent.SetDestination(waitingDestination);
             }
             else
             {
-                Stopmoving();
+                StopMoving();
             }
         }
+
         if (state == State.Wandering)
         {
             UpdateWandering();

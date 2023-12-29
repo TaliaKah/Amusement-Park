@@ -1,42 +1,42 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Entrance : MonoBehaviour
 {
+    private List<Visitor> visitorQueue = new List<Visitor>();
 
-    private List<Visitor> visitor_queue = new List<Visitor>();
-
-    public List<Visitor> Get_queue()
+    public List<Visitor> GetQueue()
     {
-        return visitor_queue;
+        return visitorQueue;
     }
 
-    public void Visitor_reach_the_queue(Visitor visitor){
-        visitor_queue.Add(visitor);
+    public void VisitorReachTheQueue(Visitor visitor)
+    {
+        visitorQueue.Add(visitor);
     }
 
-    public void Visitor_left_the_queue(Visitor visitor){
-        visitor_queue.Remove(visitor);
+    public void VisitorLeftTheQueue(Visitor visitor)
+    {
+        visitorQueue.Remove(visitor);
     }
 
-    public bool queue_is_empty(){
-        return (visitor_queue.Count == 0);
+    public bool QueueIsEmpty()
+    {
+        return (visitorQueue.Count == 0);
     }
 
-    public Vector3 Get_entrance_position()
+    public Vector3 GetEntrancePosition()
     {
         return transform.position;
     }
 
-    public Vector3 Get_waiting_position_at_the_end_of_the_file(float distanceBehindLastVisitor)
+    public Vector3 GetWaitingPositionAtTheEndOfTheQueue(float distanceBehindLastVisitor)
     {
-        return (queue_is_empty()) ? transform.position : Get_last_visitor().transform.position - (Get_last_visitor().transform.forward * distanceBehindLastVisitor);
+        return (QueueIsEmpty()) ? transform.position : GetLastVisitor().transform.position - (GetLastVisitor().transform.forward * distanceBehindLastVisitor);
     }
 
-    public Visitor Get_last_visitor()
+    public Visitor GetLastVisitor()
     {
-        return (queue_is_empty()) ? null : visitor_queue[visitor_queue.Count - 1];
+        return (QueueIsEmpty()) ? null : visitorQueue[visitorQueue.Count - 1];
     }
-
 }

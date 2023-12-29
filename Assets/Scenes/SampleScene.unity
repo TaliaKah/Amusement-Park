@@ -1363,9 +1363,9 @@ MonoBehaviour:
   door: {fileID: 1485416022}
   threshold: 3
   distanceBehindLastVisitor: 4
-  WanderingProbability: 0.1
+  wanderingProbability: 0.1
   wanderingRadius: 30
-  WanderingInterval: 2
+  wanderingInterval: 2
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -2072,7 +2072,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 53012928}
         m_TargetAssemblyTypeName: Population, Assembly-CSharp
-        m_MethodName: Create_25_visitors
+        m_MethodName: Create25Visitors
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2317,7 +2317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a47d3f9b3a90ba24d97758c4491f8b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  POIs_position: []
+  POIsPosition: []
 --- !u!1 &1536814635
 GameObject:
   m_ObjectHideFlags: 0

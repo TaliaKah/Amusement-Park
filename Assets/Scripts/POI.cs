@@ -1,88 +1,88 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class POI : MonoBehaviour
 {
-    public float visitDuration = 5.0f; // en frame
+    public float visitDuration = 5.0f; // en frames
     public int maxVisitors = 5;
 
-    private Dictionary<Visitor,float> visitor_in_attraction = new Dictionary<Visitor,float>();
-
+    private Dictionary<Visitor, float> visitorsInAttraction = new Dictionary<Visitor, float>();
     private Entrance entrance;
     private Exit exit;
 
-    void Start()
+    private void Start()
     {
         entrance = GetComponentInChildren<Entrance>();
-        Debug.Log("entrance pos : "+ entrance.transform.position);
+        Debug.Log("Entrance pos: " + entrance.transform.position);
         exit = GetComponentInChildren<Exit>();
-        Debug.Log("exit pos : "+ exit.transform.position);
+        Debug.Log("Exit pos: " + exit.transform.position);
     }
 
-    Vector3 Get_position(string Tag){
-        var childTransform = transform.Find(Tag);
+    public Vector3 GetPosition(string tag)
+    {
+        var childTransform = transform.Find(tag);
         if (childTransform != null)
         {
             return childTransform.position;
         }
-        else 
-        {    
-            Debug.Log(Tag + " doesn't exist.");
+        else
+        {
+            Debug.Log(tag + " doesn't exist.");
             return Vector3.zero;
         }
     }
 
-    public Vector3 Get_entrance_position(){
-        return Get_position("Entrance");
+    public Vector3 GetEntrancePosition()
+    {
+        return GetPosition("Entrance");
     }
 
-    public Vector3 Get_exit_position(){
-        return Get_position("Exit");
+    public Vector3 GetExitPosition()
+    {
+        return GetPosition("Exit");
     }
 
-    void Fill_the_attraction(Entrance visitorEntrance)
-    {        
+    private void FillTheAttraction(Entrance visitorEntrance)
+    {
         List<Visitor> visitorsToRemove = new List<Visitor>();
         List<Visitor> visitorsToUpdateState = new List<Visitor>();
 
-
         // Vérifier si la capacité maximale d'attraction n'est pas encore atteinte.
-        if (visitor_in_attraction.Count < maxVisitors)
+        if (visitorsInAttraction.Count < maxVisitors)
         {
-            foreach (var visitor in visitorEntrance.Get_queue())
+            foreach (var visitor in visitorEntrance.GetQueue())
             {
-                if (visitor_in_attraction.Count >= maxVisitors)
+                if (visitorsInAttraction.Count >= maxVisitors)
                 {
-                    visitor.Set_target_to_null();
+                    visitor.SetTargetToNull();
                     break;
                 }
-                visitor_in_attraction.Add(visitor, 0.0f);
+                visitorsInAttraction.Add(visitor, 0.0f);
                 visitorsToRemove.Add(visitor);
                 visitorsToUpdateState.Add(visitor);
             }
             foreach (Visitor visitor in visitorsToRemove)
             {
-                visitorEntrance.Visitor_left_the_queue(visitor);
+                visitorEntrance.VisitorLeftTheQueue(visitor);
             }
             foreach (Visitor visitor in visitorsToUpdateState)
             {
-                visitor.Update_state();
+                visitor.UpdateState();
             }
         }
     }
 
-    void Visitor_left_the_attraction(Exit visitorExit){
-
+    private void VisitorsLeftTheAttraction(Exit visitorExit)
+    {
         List<Visitor> visitorsToRemove = new List<Visitor>();
         List<Visitor> visitorsToUpdate = new List<Visitor>();
 
-        List<Visitor> currentVisitors = new List<Visitor>(visitor_in_attraction.Keys);
+        List<Visitor> currentVisitors = new List<Visitor>(visitorsInAttraction.Keys);
         foreach (var key in currentVisitors)
         {
-            visitor_in_attraction[key] += Time.deltaTime; // Increment the visit duration.
+            visitorsInAttraction[key] += Time.deltaTime; // Increment the visit duration.
 
-            if (visitor_in_attraction[key] >= visitDuration) // on rajoutera qu'il faudra que la sortie soit free peut-être
+            if (visitorsInAttraction[key] >= visitDuration) // On ajoutera qu'il faudra que la sortie soit libre peut-être
             {
                 visitorsToRemove.Add(key);
                 visitorsToUpdate.Add(key);
@@ -90,21 +90,19 @@ public class POI : MonoBehaviour
         }
         foreach (Visitor visitor in visitorsToRemove)
         {
-           visitor_in_attraction.Remove(visitor); 
+            visitorsInAttraction.Remove(visitor);
         }
         foreach (Visitor visitor in visitorsToUpdate)
         {
-            visitor.Set_position(visitorExit.transform.position);
-            visitor.Update_state();            
+            visitor.SetPosition(visitorExit.transform.position);
+            visitor.UpdateState();
         }
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        Visitor_left_the_attraction(exit);
-        Fill_the_attraction(entrance);
+        VisitorsLeftTheAttraction(exit);
+        FillTheAttraction(entrance);
     }
 }
-
-
